@@ -14,3 +14,4 @@ t.set_start_up_investment(400000)
 
 t.solution_model()
 t.print_cf_npv_pi()
+t.print_statistics()

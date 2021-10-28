@@ -1,9 +1,12 @@
 import allocation as al
 import numpy_financial as npf
+import numpy as np
+import statistics as stat
+from scipy.stats import kurtosis
 
 size = 100
 years = 4
-
+round_n = 3
 
 class output_volume:  # выходной объём
     def __init__(self):
@@ -84,7 +87,7 @@ class task_monte_carlo:
         self.variable_costs.high_costs = high_costs
         self.variable_costs.average_costs = average_costs
 
-    # постоянные затрвты
+    # постоянные затраты
     def set_fixed_costs(self, good, worse):
         self.fixed_costs.good = good
         self.fixed_costs.worse = worse
@@ -120,7 +123,7 @@ class task_monte_carlo:
         T = self.tax
         A = self.depreciation
         ce_t = (1 - T) * (Q * P - CV * Q + A - F)
-        return ce_t
+        return round(ce_t, round_n)
 
     #  NPV
     def net_present_value(self, q, f, r, p, cv, sn):  # Чистая приведенная стоимость
@@ -129,7 +132,7 @@ class task_monte_carlo:
         for t in range(1, years):
             NPV = NPV + ((self.math_model(q, p, cv, f)) / ((1 - i) ** t))
         NPV = NPV + (self.math_model(q, p, cv, f) + sn) / ((1 - i) ** years) - self.start_up_investment
-        return NPV
+        return round(NPV,round_n)
 
     # PI
     def rate_of_return(self, q, f, r, p, cv):
@@ -138,13 +141,13 @@ class task_monte_carlo:
         for t in range(1, years + 1):
             PI = PI + ((self.math_model(q, p, cv, f)) / ((1 + i) ** t))
         PI = PI / self.start_up_investment
-        return PI
+        return round(PI, round_n)
 
     def calculate_irr(self, i):
         e = [self.CF[i] for number in range(years)]
         l = [(-1)*self.start_up_investment]
         final_list = [*l, *e]
-        return round(npf.irr(final_list), 2)
+        return round(npf.irr(final_list), round_n)
 
     def solution_model(self):
         q = self.output_volume.distribution()
@@ -164,7 +167,58 @@ class task_monte_carlo:
    # https://tproger.ru/translations/basic-statistics-in-python-descriptive-statistics/
 
     def print_cf_npv_pi(self):
-        print("N  |   CF   |    NPV   |    PI   ")
+        print("N  |   CF   |    NPV   |    PI   |  irr")
         for i in range(size):
             print(str(i) + " | " + str(self.CF[i]) + " | " + str(self.NPV[i]) + " | " + str(self.PI[i]) +\
                   " | " + str(self.irr[i]))
+
+    def avg_m(self, list_n):
+        sum_score = sum(list_n)
+        # Ищем количество оценок
+        num_score = len(list_n)
+        # Считаем среднее значение
+        return sum_score / num_score
+
+        # ошибка стандартного отклонения
+    def stdDE(self, list_n:list):
+        data = np.array(list_n)
+        return data.std()
+        # Стандартное отклонение
+    def stdev(self, nums):
+        diffs = 0
+        avg = sum(nums) / len(nums)
+        for n in nums:
+            diffs += (n - avg) ** (2)
+        return (diffs / (len(nums) - 1)) ** (0.5)
+
+
+    def print_statistics(self):
+        d = dict()
+        # среднее
+        d.update({'Среднее': [self.avg_m(self.NPV), self.avg_m(self.PI), self.avg_m(self.irr)]})
+        # Стандартная ошибка
+        d.update({'Стандартная ошибка': [self.stdDE(self.NPV), self.stdDE(self.PI), self.stdDE(self.irr)]})
+        # медиана
+        d.update({'Медиана': [stat.median(self.NPV), stat.median(self.PI), stat.median(self.irr)]})
+        # мода
+        d.update({'Мода': [stat.mode(self.NPV), stat.mode(self.PI), stat.mode(self.irr)]})
+        # стандартное отклонение
+        d.update({'Стандартное отклонение': [self.stdev(self.NPV), self.stdev(self.PI), self.stdev(self.irr)]})
+        # Дисперсия выборки
+        d.update({'Дисперсия выборки': [np.var(self.NPV), np.var(self.PI), np.var(self.irr)]})
+        # Эксцесс
+        d.update({'Эксцесс': [kurtosis(self.NPV), kurtosis(self.PI), kurtosis(self.irr)]})
+        # Асимметричность
+
+        # Интервал
+
+        # Миниум
+
+        # Максиум
+
+        # Сумма
+
+        # Счёт
+
+        for key in d:
+            print(key+" "+str(d[key]))
