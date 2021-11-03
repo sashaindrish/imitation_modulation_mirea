@@ -4,6 +4,13 @@ import numpy as np
 import statistics as stat
 from scipy.stats import kurtosis
 
+import scipy.stats as sps
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+import scipy.optimize as spo
+
 size = 100
 years = 4
 round_n = 3
@@ -179,11 +186,12 @@ class task_monte_carlo:
         # Считаем среднее значение
         return sum_score / num_score
 
-        # ошибка стандартного отклонения
+    # ошибка стандартного отклонения
     def stdDE(self, list_n:list):
         data = np.array(list_n)
         return data.std()
-        # Стандартное отклонение
+
+    # Стандартное отклонение
     def stdev(self, nums):
         diffs = 0
         avg = sum(nums) / len(nums)
@@ -191,6 +199,35 @@ class task_monte_carlo:
             diffs += (n - avg) ** (2)
         return (diffs / (len(nums) - 1)) ** (0.5)
 
+    def interval(self, x):
+        n = len(x)
+        lin_model = sps.linregress(x)
+        a,b = lin_model.slope, lin_model.intercept
+        # оценка ср.кв. ошибки для a и b
+        a_err, b_err = lin_model.stderr, lin_model.intercept_stderr
+        a_conf = sps.t.interval(0.95, df = n-2, loc=a, scale=a_err)
+        b_conf = sps.t.interval(0.95, df = n-2, loc=b, scale=b_err)
+        return a_conf
+
+    def vue_results(self, list_vue1, list_vue2, title1, title2, xlabel1, xlabel2):
+        fig, (ax1, ax2) = plt.subplots(
+            nrows=1, ncols=2,
+            figsize=(10, 5)
+        )
+        count, bins, ignored = ax1.hist(list_vue1, bins=10)
+        ax1.plot(bins, np.ones_like(bins))
+        ax1.legend(["Наиб част. возн.", "Возникновения"])
+        ax1.set_title(title1)
+        ax1.set_ylabel('Частота возникновения')
+        ax1.set_xlabel(xlabel1)
+
+        count, bins, ignored = ax2.hist(list_vue2, bins=10)
+        ax2.plot(bins, np.ones_like(bins))
+        ax2.legend(["Наиб част. возн.", "Возникновения"])
+        ax2.set_title(title2)
+        ax2.set_ylabel('Частота возникновения')
+        ax2.set_xlabel(xlabel2)
+        plt.show()
 
     def print_statistics(self):
         d = dict()
@@ -208,17 +245,26 @@ class task_monte_carlo:
         d.update({'Дисперсия выборки': [np.var(self.NPV), np.var(self.PI), np.var(self.irr)]})
         # Эксцесс
         d.update({'Эксцесс': [kurtosis(self.NPV), kurtosis(self.PI), kurtosis(self.irr)]})
-        # Асимметричность
 
+        # Асимметричность
+        # d.update({''})
         # Интервал
+        #d.update({'Интервал': [self.interval(self.NPV), self.interval(self.PI), self.interval(self.irr)]})
 
         # Миниум
-
+        d.update({'Миниум': [min(self.NPV), min(self.PI), min(self.irr)]})
         # Максиум
-
+        d.update({'Максиум': [max(self.NPV), max(self.PI), max(self.irr)]})
         # Сумма
-
+        d.update({'Сумма': [sum(self.NPV), sum(self.PI), sum(self.irr)]})
         # Счёт
-
+        d.update({'Счёт': [size, size, size]})
         for key in d:
             print(key+" "+str(d[key]))
+
+        self.vue_results(self.output_volume.distribution(), self.variable_costs.distribution(), 'Выход продукции',
+                         'Переменные затрвты', 'Продукция', 'У.Е.')
+        self.vue_results(self.CF, self.NPV, 'Выход продукции',
+                         'Переменные затрвты', 'Продукция', 'У.Е.')
+
+

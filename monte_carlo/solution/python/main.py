@@ -1,5 +1,6 @@
 from task_monte_carlo import task_monte_carlo
-
+import random
+print("Вариант: ", random.randint(1, 12))
 t = task_monte_carlo(0)
 
 t.set_output_volume(5500, 270)
