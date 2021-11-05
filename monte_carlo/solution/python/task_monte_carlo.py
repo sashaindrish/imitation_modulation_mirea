@@ -15,6 +15,7 @@ size = 100
 years = 4
 round_n = 3
 
+
 class output_volume:  # выходной объём
     def __init__(self):
         self.worse = 0
@@ -81,6 +82,7 @@ class task_monte_carlo:
         self.residual_value = residual_value()
         self.start_up_investment = 0
         self.number_task = number
+        self.print_dict = dict()
 
     # цена за одну штуку
     def set_price_for_one(self, low_price, high_price, average_price):
@@ -139,7 +141,7 @@ class task_monte_carlo:
         for t in range(1, years):
             NPV = NPV + ((self.math_model(q, p, cv, f)) / ((1 - i) ** t))
         NPV = NPV + (self.math_model(q, p, cv, f) + sn) / ((1 - i) ** years) - self.start_up_investment
-        return round(NPV,round_n)
+        return round(NPV, round_n)
 
     # PI
     def rate_of_return(self, q, f, r, p, cv):
@@ -152,7 +154,7 @@ class task_monte_carlo:
 
     def calculate_irr(self, i):
         e = [self.CF[i] for number in range(years)]
-        l = [(-1)*self.start_up_investment]
+        l = [(-1) * self.start_up_investment]
         final_list = [*l, *e]
         return round(npf.irr(final_list), round_n)
 
@@ -163,6 +165,8 @@ class task_monte_carlo:
         p = self.price_for_one.distribution()
         cv = self.variable_costs.distribution()
         sn = self.residual_value.distribution()
+        self.print_dict.update({'Выход продукции': ['Продукция', q]})
+        self.print_dict.update({'Переменные затраты': ['У.Е.', cv]})
 
         for i in range(size):
             self.CF.append(self.math_model(q[i], p[i], cv[i], f[i]))
@@ -170,13 +174,18 @@ class task_monte_carlo:
             self.PI.append(self.rate_of_return(q[i], f[i], r[i], p[i], cv[i]))
             self.irr.append(self.calculate_irr(i))
 
-   # https: // docs.python.org / 3.4 / library / statistics.html  # statistics.median
-   # https://tproger.ru/translations/basic-statistics-in-python-descriptive-statistics/
+        self.print_dict.update({'Платежи': ['У.Е.', self.CF]})
+        self.print_dict.update({'Чистая приведенная стоимость': ['У.Е.', self.NPV]})
+        self.print_dict.update({'Норма доходности': ['Коэф.', self.PI]})
+
+
+    # https: // docs.python.org / 3.4 / library / statistics.html  # statistics.median
+    # https://tproger.ru/translations/basic-statistics-in-python-descriptive-statistics/
 
     def print_cf_npv_pi(self):
         print("N  |   CF   |    NPV   |    PI   |  irr")
         for i in range(size):
-            print(str(i) + " | " + str(self.CF[i]) + " | " + str(self.NPV[i]) + " | " + str(self.PI[i]) +\
+            print(str(i) + " | " + str(self.CF[i]) + " | " + str(self.NPV[i]) + " | " + str(self.PI[i]) + \
                   " | " + str(self.irr[i]))
 
     def avg_m(self, list_n):
@@ -187,7 +196,7 @@ class task_monte_carlo:
         return sum_score / num_score
 
     # ошибка стандартного отклонения
-    def stdDE(self, list_n:list):
+    def stdDE(self, list_n: list):
         data = np.array(list_n)
         return data.std()
 
@@ -202,31 +211,35 @@ class task_monte_carlo:
     def interval(self, x):
         n = len(x)
         lin_model = sps.linregress(x)
-        a,b = lin_model.slope, lin_model.intercept
+        a, b = lin_model.slope, lin_model.intercept
         # оценка ср.кв. ошибки для a и b
         a_err, b_err = lin_model.stderr, lin_model.intercept_stderr
-        a_conf = sps.t.interval(0.95, df = n-2, loc=a, scale=a_err)
-        b_conf = sps.t.interval(0.95, df = n-2, loc=b, scale=b_err)
+        a_conf = sps.t.interval(0.95, df=n - 2, loc=a, scale=a_err)
+        b_conf = sps.t.interval(0.95, df=n - 2, loc=b, scale=b_err)
         return a_conf
 
-    def vue_results(self, list_vue1, list_vue2, title1, title2, xlabel1, xlabel2):
-        fig, (ax1, ax2) = plt.subplots(
-            nrows=1, ncols=2,
-            figsize=(10, 5)
-        )
-        count, bins, ignored = ax1.hist(list_vue1, bins=10)
-        ax1.plot(bins, np.ones_like(bins))
-        ax1.legend(["Наиб част. возн.", "Возникновения"])
-        ax1.set_title(title1)
-        ax1.set_ylabel('Частота возникновения')
-        ax1.set_xlabel(xlabel1)
+    def patern_graph(self, ax, list_to_prt: list, title: str, xlabel: str, ylabel: str, bins: int):
+        count, bins, ignored = ax.hist(list_to_prt, bins=bins)
+        ax.plot(bins, np.ones_like(bins))
+        ax.legend(["Наиб част. возн.", "Возникновения"])
+        ax.set_title(title)
+        ax.set_ylabel(ylabel)
+        ax.set_xlabel(xlabel)
+        return ax
 
-        count, bins, ignored = ax2.hist(list_vue2, bins=10)
-        ax2.plot(bins, np.ones_like(bins))
-        ax2.legend(["Наиб част. возн.", "Возникновения"])
-        ax2.set_title(title2)
-        ax2.set_ylabel('Частота возникновения')
-        ax2.set_xlabel(xlabel2)
+    def vue_results(self):
+
+        fig, ax = plt.subplots(
+            nrows=1, ncols=5,
+            figsize=(35, 5)
+        )
+        i=0
+        for key in self.print_dict:
+            xlabel, list_vue = self.print_dict[key]
+            self.patern_graph(ax[i], list_vue, key, xlabel, 'Частота возникновения', 10)
+            i = i+1
+
+
         plt.show()
 
     def print_statistics(self):
@@ -249,7 +262,7 @@ class task_monte_carlo:
         # Асимметричность
         # d.update({''})
         # Интервал
-        #d.update({'Интервал': [self.interval(self.NPV), self.interval(self.PI), self.interval(self.irr)]})
+        # d.update({'Интервал': [self.interval(self.NPV), self.interval(self.PI), self.interval(self.irr)]})
 
         # Миниум
         d.update({'Миниум': [min(self.NPV), min(self.PI), min(self.irr)]})
@@ -260,11 +273,5 @@ class task_monte_carlo:
         # Счёт
         d.update({'Счёт': [size, size, size]})
         for key in d:
-            print(key+" "+str(d[key]))
-
-        self.vue_results(self.output_volume.distribution(), self.variable_costs.distribution(), 'Выход продукции',
-                         'Переменные затрвты', 'Продукция', 'У.Е.')
-        self.vue_results(self.CF, self.NPV, 'Выход продукции',
-                         'Переменные затрвты', 'Продукция', 'У.Е.')
-
-
+            print(key + " " + str(d[key]))
+        self.vue_results()
