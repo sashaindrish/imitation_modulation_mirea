@@ -3,13 +3,9 @@ import numpy_financial as npf
 import numpy as np
 import statistics as stat
 from scipy.stats import kurtosis
-
 import scipy.stats as sps
-
-import seaborn as sns
 import matplotlib.pyplot as plt
 
-import scipy.optimize as spo
 
 size = 100
 years = 4
@@ -178,9 +174,6 @@ class task_monte_carlo:
         self.print_dict.update({'Чистая приведенная стоимость': ['У.Е.', self.NPV]})
         self.print_dict.update({'Норма доходности': ['Коэф.', self.PI]})
 
-
-    # https: // docs.python.org / 3.4 / library / statistics.html  # statistics.median
-    # https://tproger.ru/translations/basic-statistics-in-python-descriptive-statistics/
 
     def print_cf_npv_pi(self):
         print("N  |   CF   |    NPV   |    PI   |  irr")
