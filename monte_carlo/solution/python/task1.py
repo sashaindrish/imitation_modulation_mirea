@@ -3,6 +3,7 @@ import random
 
 
 def task():
+    random.seed(23051993)
     print("Вариант: ", random.randint(1, 12))
 
     # example = task_monte_carlo(0)
@@ -20,9 +21,9 @@ def task():
     # example.solution_model()
     # example.print_cf_npv_pi()
     # example.print_statistics()
-
+    random.seed(23051993)
     t = task_monte_carlo(6)
-
+    
     t.set_output_volume(6700, 450)
     t.set_tax(0.4)
     t.set_residual_value(0.00007)
