@@ -22,7 +22,7 @@ def task():
     # example.print_cf_npv_pi()
     # example.print_statistics()
 
-    t = task_monte_carlo(6)
+    t = task_monte_carlo(2)
 
     t.set_output_volume(5500, 270)
     t.set_tax(0.4)
