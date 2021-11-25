@@ -1,2 +1,5 @@
 # ignore all logs
 *.log
+# ide
+.idea
+/monte_carlo/solution/python/venv/
