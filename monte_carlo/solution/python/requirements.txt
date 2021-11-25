@@ -1,0 +1,5 @@
+numpy_financial
+numpy
+statistics
+scipy
+matplotlib
