@@ -3,6 +3,7 @@ import random
 
 
 def task():
+    random.seed(13071995)
     print("Вариант: ", random.randint(1, 12))
 
     # example = task_monte_carlo(0)
