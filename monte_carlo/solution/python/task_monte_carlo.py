@@ -7,7 +7,7 @@ import scipy.stats as sps
 import matplotlib.pyplot as plt
 
 
-size = 100
+size = 500
 years = 4
 round_n = 3
 
@@ -135,8 +135,8 @@ class task_monte_carlo:
         i = r 
         NPV = 0
         for t in range(1, years):
-            NPV = NPV + ((self.math_model(q, p, cv, f)) / ((1 - i) ** t))
-        NPV = NPV + (self.math_model(q, p, cv, f) + sn) / ((1 - i) ** years) - self.start_up_investment
+            NPV = NPV + ((self.math_model(q, p, cv, f)) / ((1 + i) ** t))
+        NPV = NPV + (self.math_model(q, p, cv, f) + sn) / ((1 + i) ** years) - self.start_up_investment
         return round(NPV, round_n)
 
     # PI
