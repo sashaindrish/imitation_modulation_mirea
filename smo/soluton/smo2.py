@@ -3,11 +3,10 @@ import random
 from tabulate import tabulate
 import math
 
-
 round_n = 3
 
 
-def smo_model(avg_time_PinH, avg_min, size, time, print_data =True):
+def smo_model(avg_time_PinH, avg_min, size, time, print_data=True):
     index_stop = None
     #################################################################################################
     # список покупателей
@@ -29,11 +28,9 @@ def smo_model(avg_time_PinH, avg_min, size, time, print_data =True):
     for i in range(1, size):
         t_kumulitive_list.append(round(clients[i] + t_kumulitive_list[i - 1], round_n))
 
-
     if time != None:
         for i in range(size):
             if t_kumulitive_list[i] >= time:
-
                 index_stop = i
                 break
         if (index_stop == None):
@@ -144,6 +141,7 @@ def smo_model(avg_time_PinH, avg_min, size, time, print_data =True):
 
     return (KZP, SDO, SVOvO, MaxLQ, SVPZvS)
 
+
 #################################################################################################
 
 if __name__ == '__main__':
@@ -156,7 +154,7 @@ if __name__ == '__main__':
     avg_min = 5  # время на обслуживание (интенсивность обслуживания)
 
     KZP = 0
-    SDO = 4 #Средняя длинна очереди
+    SDO = 4  # Средняя длинна очереди
     SVOvO = 10  # Среднее время ожидания в очереди
     MaxLQ = 0
     SVPZvS = 0
@@ -166,6 +164,8 @@ if __name__ == '__main__':
     print("Интенсивность поступления = ", avg_time_PinH)
     print("Ограничение посетителей =", size)
 
+    (KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, None, True)
+
     # вариант а
     # print(" вариант а")
     # print("Среднее время ожидание в очереди должно быть меньше чем 5 ")
@@ -174,7 +174,7 @@ if __name__ == '__main__':
     #     avg_min = round(avg_min - 0.1, 2)
     #     (KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, None, False)
 
-#################################################################################################
+    #################################################################################################
     # вариант Б
     # print(" вариант Б")
     # print("Средняя длинна очереди должна быть меньше чем 3 \n")
@@ -184,19 +184,19 @@ if __name__ == '__main__':
     #     avg_time_PinH = round(60 / PinH, 2) # среднее время интенсивности почступления заявок
     #     (KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, time=None, print_data=False)
     # print()
-#################################################################################################
+    #################################################################################################
     # вариант B
     # print(" вариант B")
     # print("1000 клиентов ограничение \n")
     # size = 1000
     # (KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, time=None, print_data=True)
     # print()
-#################################################################################################
+    #################################################################################################
     # вариант Г
-    print(" вариант Г")
-    print(" Ограничение по времени 10 часов")
-    hour = 10
-    (KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, time=hour*60)
+    # print(" вариант Г")
+    # print(" Ограничение по времени 10 часов")
+    # hour = 10
+    # (KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, time=hour*60)
 
     print("Выходные данные :")
 
@@ -212,6 +212,3 @@ if __name__ == '__main__':
     print("Среднее время ожидания в очереди = ", SVOvO)
     print("Максимальная длинна в очереди = ", MaxLQ)
     print("Среднее время пребывания заявок в системе = ", SVPZvS)
-
-
-
