@@ -31,7 +31,7 @@ def triangular_distribution(left=-3, mode=0, right=8, nums=100000, print_graph=T
 
 
 def exponential_distribution(scale=1.0, nums=10000, print_graph=True):
-    print(" exponential distribution -  scale= " + str(scale) + " nums= " + str(nums))
+    #print(" exponential distribution -  scale= " + str(scale) + " nums= " + str(nums))
     s = np.random.exponential(scale, size=nums)
     if print_graph:
         print(s)
