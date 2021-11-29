@@ -29,7 +29,7 @@ def task():
     t.set_residual_value(0.00007)
     t.set_depreciation(2500)
     t.set_variable_costs(100, 160, 130)
-    t.set_discount_rate(14.5, 6.5)
+    t.set_discount_rate(0.145, 0.065)
     t.set_fixed_costs(40000, 60000)
     t.set_price_for_one(180, 230, 210)
     t.set_start_up_investment(500000)
