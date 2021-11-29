@@ -132,7 +132,7 @@ class task_monte_carlo:
 
     #  NPV
     def net_present_value(self, q, f, r, p, cv, sn):  # Чистая приведенная стоимость
-        i = r / 100
+        i = r 
         NPV = 0
         for t in range(1, years):
             NPV = NPV + ((self.math_model(q, p, cv, f)) / ((1 - i) ** t))
@@ -142,7 +142,7 @@ class task_monte_carlo:
     # PI
     def rate_of_return(self, q, f, r, p, cv):
         PI = 0
-        i = r / 100
+        i = r 
         for t in range(1, years + 1):
             PI = PI + ((self.math_model(q, p, cv, f)) / ((1 + i) ** t))
         PI = PI / self.start_up_investment
