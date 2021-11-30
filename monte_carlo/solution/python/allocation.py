@@ -49,6 +49,9 @@ def uniform_distribution(low=0.0, high=1.0, size=10000, print_graph=True):
         plt.plot(bins, np.ones_like(bins), linewidth=2, color='r')
         plt.show()
     return s
+
+def constant(value, nums=1000):
+    return np.repeat(value, nums)
 # normal_distribution()
 # triangular_distribution(180, 210, 230)
 # exponential_distribution()
