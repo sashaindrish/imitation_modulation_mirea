@@ -70,17 +70,17 @@ class MonteCarlo(ABC):
 class Task2(MonteCarlo):
     def calculate_cf_t(self, i: int, for_year: int = None) -> float:
         v = lambda name: self._get_values_for_year(name, i, for_year)  # noqa: E731
-        # (1 - T) * (Q * P - (1 - CP) - (1 - OPEX))
+        # (1 - T) * (Q * P * (1 - CP) * (1 - OP))
         return (1 - v('tax')) * (
-                v('output_volume') * v('price_for_one') -
-                (1 - (v('price_for_one') * v('self_costs_percent'))) -
+                v('output_volume') * v('price_for_one') *
+                (1 - (v('price_for_one') * v('self_costs_percent'))) *
                 (1 - (v('price_for_one') * v('operational_fee_percent'))))
 
 
 class Task3(MonteCarlo):
     def calculate_cf_t(self, i: int, for_year: int = None) -> float:
         v = lambda name: self._get_values_for_year(name, i, for_year)  # noqa: E731
-        # (1 - T) * (Q * P - (1 - CP) - (1 - OPEX))
+        # (1 - T) * (Q * P * (1 - CP) * (1 - OP))
         return (1 - v('tax')) * (
                 v('output_volume') * v('price_for_one') -
                 (1 - (v('price_for_one') * v('self_costs_percent'))) -

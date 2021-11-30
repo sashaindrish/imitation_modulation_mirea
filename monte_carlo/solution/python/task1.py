@@ -5,7 +5,7 @@ import random
 def task():
     random.seed(23051993)
     print("Вариант: ", random.randint(1, 12))
-
+    # пример
     # example = task_monte_carlo(0)
     #
     # example.set_output_volume(5500, 270)
@@ -21,6 +21,7 @@ def task():
     # example.solution_model()
     # example.print_cf_npv_pi()
     # example.print_statistics()
+
     random.seed(23051993)
     t = task_monte_carlo(6)
     
@@ -37,3 +38,7 @@ def task():
     t.solution_model()
     t.print_cf_npv_pi()
     t.print_statistics()
+
+
+if __name__ == '__main__':
+    task()
