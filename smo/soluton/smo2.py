@@ -164,15 +164,15 @@ if __name__ == '__main__':
     print("Интенсивность поступления = ", avg_time_PinH)
     print("Ограничение посетителей =", size)
 
-    (KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, None, True)
+    #(KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, None, True)
 
     # вариант а
-    # print(" вариант а")
-    # print("Среднее время ожидание в очереди должно быть меньше чем 5 ")
-    # avg_min = 10
-    # while SVOvO >= 5:
-    #     avg_min = round(avg_min - 0.1, 2)
-    #     (KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, None, False)
+    print(" вариант а")
+    print("Среднее время ожидание в очереди должно быть меньше чем 5 ")
+    avg_min = 10
+    while SVOvO >= 5:
+        avg_min = round(avg_min - 0.1, 2)
+        (KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, None, False)
 
     #################################################################################################
     # вариант Б
