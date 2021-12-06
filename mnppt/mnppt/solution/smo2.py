@@ -18,10 +18,10 @@ def smo_model(avg_time_PinH, avg_min, size, time, print_data=True, start_num_bau
     random.seed(105531)
     duration_of_service = al.exponential_distribution(scale=avg_min, nums=size, print_graph=False)  # время обслуживания
     clients = al.exponential_distribution(scale=avg_time_PinH, nums=size,
-                                          print_graph=False)  # время поступления клиента
+                                          print_graph=False)  # время поступления запроса
 
     # print("ожидание обслуживания = \n", duration_of_service)
-    # print("\nвремя прихода клиентов = \n", clients)
+    # print("\nвремя прихода запроса = \n", clients)
     #################################################################################################
     # t пос кумулятивное
     t_kumulitive_list = list()  # время комулетивное
@@ -36,8 +36,8 @@ def smo_model(avg_time_PinH, avg_min, size, time, print_data=True, start_num_bau
                 break
         if (index_stop == None):
             index_stop = size
-        print("Ограничение по времени (мин) = ", time)
-        print("Пcледний клиент по времени = ", index_stop)
+        print("Ограничение по времени (врем. ед) = ", time)
+        print("Пcледний запрос по времени = ", index_stop)
 
         for i in range(index_stop, size):
             clients[i] = None
@@ -124,9 +124,9 @@ def smo_model(avg_time_PinH, avg_min, size, time, print_data=True, start_num_bau
             t_start_service[i],
             t_end_service[i], system_in_time[i], time_in_queue[i], num_obs[i], len_queue[i], downtime[i])})
 
-    headers = ['№ клиента', 'Время поступ', 'Время обслуживания', 'Т кумулятив', 'Начало обслуживания',
+    headers = ['№ запроса', 'Время поступ', 'Время обслуживания', 'Т кумулятив', 'Начало обслуживания',
                'конец обслуживания',
-               'время в сист', 'время в очереди', '№ осбл. покуп', 'Длинна очереди', 'Время простоя']
+               'время в сист', 'время в очереди', '№ осбл. запроса', 'Длинна очереди', 'Время простоя']
     if print_data:
         print(tabulate([(k,) + v for k, v in all_stat.items()], headers=headers))
     # else:
@@ -157,10 +157,10 @@ def smo_model(avg_time_PinH, avg_min, size, time, print_data=True, start_num_bau
 if __name__ == '__main__':
     print("Однокональная СМО \n Входные данные \n")
 
-    PinH = 10  # клиенты в час / начало вариант б - 20 ч/ч
+    PinH = 10  # запросы в ед. времени / начало вариант б - 20 ч/ч
     avg_time_PinH = 60 / PinH  # среднее время интенсивности почступления заявок
 
-    size = 100  # огранечение посетителей #вариант в 1000
+    size = 100  # огранечение запросов #вариант в 1000
     avg_min = 5  # время на обслуживание (интенсивность обслуживания)
 
     KZP = 0
@@ -169,10 +169,10 @@ if __name__ == '__main__':
     MaxLQ = 0
     SVPZvS = 0
 
-    print("Клиентов за час = ", PinH)
+    print("Запросов за ед. времени = ", PinH)
     print("Время на обслуживание (интенсивность обслуживания) =", avg_min)
     print("Интенсивность поступления = ", avg_time_PinH)
-    print("Ограничение посетителей =", size)
+    print("Ограничение запросов =", size)
 
     (KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, None, True)
 
@@ -190,34 +190,34 @@ if __name__ == '__main__':
     # print("Средняя длинна очереди должна быть меньше чем 3 \n")
     # PinH = 20
     # while  SDO >= 3:
-    #     PinH = round(PinH - 0.1, 2)  # клиенты в час
+    #     PinH = round(PinH - 0.1, 2)  # запросы в ед времени
     #     avg_time_PinH = round(60 / PinH, 2) # среднее время интенсивности почступления заявок
     #     (KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, time=None, print_data=False)
     # print()
     #################################################################################################
     # вариант B
     # print(" вариант B")
-    # print("1000 клиентов ограничение \n")
+    # print("1000 огрнаичение запросов \n")
     # size = 1000
     # (KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, time=None, print_data=True)
     # print()
     #################################################################################################
     # вариант Г
     # print(" вариант Г")
-    # print(" Ограничение по времени 10 часов")
+    # print(" Ограничение по времени 10 временных единиц")
     # hour = 10
     # (KZP, SDO, SVOvO, MaxLQ, SVPZvS) = smo_model(avg_time_PinH, avg_min, size, time=hour*60)
 
     print("Выходные данные :")
 
-    print("Клиентов за час = ", PinH)
+    print("запросов за ед. времени = ", PinH)
     print("Время на обслуживание (интенсивность обслуживания) =", avg_min)
     print("Интенсивность поступления = ", avg_time_PinH)
-    # print("Ограничение посетителей =", size)
+    # print("Ограничение запросов =", size)
 
     print("\n Основные параметры системы \n")
 
-    print("Коэфициент загружености продавца = ", KZP)
+    print("Коэфициент загружености IP-блока = ", KZP)
     print("Средняя длинна очереди = ", SDO)
     print("Среднее время ожидания в очереди = ", SVOvO)
     print("Максимальная длинна в очереди = ", MaxLQ)
