@@ -1,0 +1,27 @@
+# Core numerical and scientific computing
+numpy>=1.21.0
+scipy>=1.7.0
+
+# Financial calculations
+numpy_financial>=1.0.0
+
+# Visualization
+matplotlib>=3.5.0
+
+# Queueing system simulation
+ciw>=2.1.0
+
+# Table formatting
+tabulate>=0.8.9
+
+# Statistical functions (built-in, but listed for clarity)
+# statistics - built into Python 3.4+
+
+# Optional: Jupyter notebook support
+jupyter>=1.0.0
+ipykernel>=6.0.0
+
+# Optional: Development tools
+pytest>=6.0.0
+black>=21.0.0
+flake8>=3.9.0
